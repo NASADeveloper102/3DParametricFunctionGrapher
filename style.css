@@ -1,0 +1,71 @@
+canvas{
+	height: 60%;
+	width: 40%;
+	position: absolute;
+	left: 10%;
+	border: 1px solid black;
+	top:20%;
+	cursor: pointer; 
+}
+#Equations{
+	height: 50%;
+	width:20%;
+	position: absolute;
+	left: 50%;
+	border: 1px solid black;
+	top: 20%;
+	overflow-y: auto;
+	word-wrap: break-word;
+	text-align: center;
+}
+#EditTable{
+	height: 60%;
+	width:20%;
+	position: absolute;
+	left: 70%;
+	border: 1px solid black;
+	top: 20%;
+	text-align: center;
+	font-size: 19px;
+}
+#DeleteButton{
+	height: 10%;
+	width:10%;
+	position: absolute;
+	left: 50%;
+	border: 1px solid red;
+	top: 70%;
+	background-color: red;
+	color: white;
+	text-align: center;
+	font-size: 19px;
+	cursor: pointer;
+}
+#CreateButton{
+	height: 10%;
+	width:10%;
+	position: absolute;
+	left: 60%;
+	border: 1px solid green;
+	top: 70%;
+	background-color: green;
+	color: white;
+	text-align: center;
+	font-size: 19px;
+	cursor: pointer;
+}
+h6, textarea, h5{
+	margin: 0%;
+	padding: 0%;
+}
+.equation{
+	border: 1px solid black;
+	display: inline-block;
+}
+button{
+	display: inline-block;
+	cursor: pointer;
+}
+textarea{
+	height: 15%;
+}
