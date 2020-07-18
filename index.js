@@ -49,10 +49,10 @@ function drawAxis(){
 	line(300, 0, 0, -300, 0, 0);
 }
 function onRotationClick(){
-	RotationObject.x = parseFloat($('#xRotation').val());
-	RotationObject.y = parseFloat($('#yRotation').val());
-	RotationObject.z = parseFloat($('#zRotation').val());
-	AmountOfPoints = parseInt($('#Points').val())
+	RotationObject.x = parseFloat($('#xRotation').val())/100;
+	RotationObject.y = parseFloat($('#yRotation').val())/100;
+	RotationObject.z = parseFloat($('#zRotation').val())/100;
+	AmountOfPoints = parseInt($('#Points').val());
 }
 
 
@@ -73,7 +73,7 @@ function onCreateEquationClick(){
 }
 function onCreateButtonClick(){
 	SelectedWindow = Windows.Equations;
-	$("#EditTable").html("<h6>Name</h6><input id = 'name'><h6>Bounds of function</h6><input id = 'bounds'><h6>Size of points</h6><input id = 'size' value='5' type ='number'><h6>Color</h6><input id = 'color' value='Green'><h6>X</h6><textarea id ='x'>function x(t){return 50;}</textarea><h6>Y</h6><textarea id ='y'>function y(t){return 50;}</textarea><h6>Z</h6><textarea id ='z'>function z(t){return 50;}</textarea><br><button id = 'Create'>Create</button>");
+	$("#EditTable").html("<h6>Name</h6><input id = 'name'><h6>Bounds of function</h6><input id = 'bounds' type='number'><h6>Size of points</h6><input id = 'size' value='5' type ='number'><h6>Color</h6><input id = 'color' value='Green'><h6>X</h6><textarea id ='x'>function x(t){return 50;}</textarea><h6>Y</h6><textarea id ='y'>function y(t){return 50;}</textarea><h6>Z</h6><textarea id ='z'>function z(t){return 50;}</textarea><br><button id = 'Create'>Create</button>");
 	document.getElementById("Create").onclick = onCreateEquationClick;
 }
 function RotateUsingObject(){
