@@ -93,18 +93,11 @@ function drawPoints(){
 	for(var i = 0; i < Functions.length; i++){
 		stroke(Functions[i].Color);
 		strokeWeight(Functions[i].Size);
-		fill(0);
-		noFill();
-		beginShape(LINES);
 		var PreviousValue = Functions[i].CalculateValue(-Math.round(AmountOfPoints/2));
 		for(var o = -Math.round(AmountOfPoints/2)+1; o < Math.round(AmountOfPoints/2); o++){
 			var Value = Functions[i].CalculateValue(o);
-			vertex(PreviousValue.x, -PreviousValue.y, PreviousValue.z);
-			vertex(Value.x, -Value.y, Value.z);
-			PreviousValue = Value;
 			point(Value.x, -Value.y, Value.z);
 		}
-		endShape();
 	}
 }
 function draw(){
