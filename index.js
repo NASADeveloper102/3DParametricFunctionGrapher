@@ -101,7 +101,7 @@ function drawPoints(){
 		stroke(Functions[i].Color);
 		strokeWeight(Functions[i].Size);
 		var PreviousValue = Functions[i].CalculateValue(-Math.round(AmountOfPoints/2));
-		var PointValues = -25;
+		var PointValues = -Functions[i].Bounds;
 		for(var o = -Math.round(AmountOfPoints/2); o < Math.round(AmountOfPoints/2); o++){
 			var Value = Functions[i].CalculateValue(PointValues);
 			point(Value.x, -Value.y, Value.z);
@@ -130,7 +130,7 @@ function onReset(){
 function onCanvasClick(){
 	SelectedWindow = Windows.Canvas;
 
-	jQuery('#EditTable').html("<h3>Settings</h3><h5>Rotation X</h5><input id = 'xRotation' type='number' value='" + RotationObject.x + "'><h5>Rotation Y</h5><input id = 'yRotation' type='number' value='" + RotationObject.y +"'><h5>Rotation Z</h5><input id = 'zRotation' type='number' value ='" + RotationObject.z + "'><h5>Amount of points</h5><input id = 'Points' type='number' value ='" + AmountOfPoints + "'><button id = 'Toggle'>Toggle Rotation</button><button id = 'Reset'>Reset Rotation</button><button id = 'Push'>Push Settings</button>");
+	jQuery('#EditTable').html("<h3>Settings</h3><h5>Rotation X</h5><input id = 'xRotation' type='number' value='" + RotationObject.x * 100+ "'><h5>Rotation Y</h5><input id = 'yRotation' type='number' value='" + RotationObject.y *100 +"'><h5>Rotation Z</h5><input id = 'zRotation' type='number' value ='" + RotationObject.z*100 + "'><h5>Amount of points</h5><input id = 'Points' type='number' value ='" + AmountOfPoints + "'><button id = 'Toggle'>Toggle Rotation</button><button id = 'Reset'>Reset Rotation</button><button id = 'Push'>Push Settings</button>");
 	document.getElementById("Push").onclick = onRotationClick;
 	document.getElementById("Toggle").onclick = onToggle;
 	document.getElementById("Reset").onclick = onReset;
