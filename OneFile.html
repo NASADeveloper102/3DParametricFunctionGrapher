@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-161744768-2"></script>
+	    <script>
+	        window.dataLayer = window.dataLayer || [];
+	        function gtag(){dataLayer.push(arguments);}
+	        gtag('js', new Date());
+
+	        gtag('config', 'UA-161744768-2');
+	    </script>
+	    <meta charset="UTF-8">
+		<title>PhysimX - Parametrics</title>
+		<link rel="icon" href="../images/favicon.png" type="image/png"/>
+	    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+	    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<style type="text/css">
+			canvas{
+				height: 85%;
+				width: 40%;
+				position: absolute;
+				left: 10%;
+				border: 1px solid black;
+				top:10%;
+				cursor: pointer; 
+			}
+			#Equations{
+				height: 75%;
+				width:20%;
+				position: absolute;
+				left: 50%;
+				border: 1px solid black;
+				top: 10%;
+				overflow-y: auto;
+				word-wrap: break-word;
+				text-align: center;
+			}
+			#EditTable{
+				height: 85%;
+				width:20%;
+				position: absolute;
+				left: 70%;
+				border: 1px solid black;
+				top: 10%;
+				text-align: center;
+				font-size: 19px;
+			}
+			#DeleteButton{
+				height: 10%;
+				width:10%;
+				position: absolute;
+				left: 50%;
+				border: 1px solid red;
+				top: 85%;
+				background-color: red;
+				color: white;
+				text-align: center;
+				font-size: 19px;
+				cursor: pointer;
+			}
+			#CreateButton{
+				height: 10%;
+				width:10%;
+				position: absolute;
+				left: 60%;
+				border: 1px solid green;
+				top: 85%;
+				background-color: green;
+				color: white;
+				text-align: center;
+				font-size: 19px;
+				cursor: pointer;
+			}
+			h6, textarea, h5{
+				margin: 0%;
+				padding: 0%;
+			}
+			.equation{
+				border: 1px solid black;
+				display: inline-block;
+			}
+			button{
+				display: inline-block;
+				cursor: pointer;
+			}
+			textarea{
+				height: 15%;
+			}
+		</style>
+		<script src="http://cdn.jsdelivr.net/npm/p5@1.0.0/lib/p5.js"></script>
+		<script src="code.jquery.com/jquery-3.5.1.min.js"></script>
+	</head>
+	<body>
+		<div id = "Equations">
+			<h1>Equations</h1>
+		</div>
+		<div id = "DeleteButton">
+			<h3>Delete All</h3>
+		</div>
+		<div id = "CreateButton">
+			<h3>Create New</h3>
+		</div>
+		<div id = "EditTable"></div>
+	</body>
+	<script>
+		class VectorFunction{
+			constructor(xFunction, yFunction, zFunction, Name, Color, Size, Bounds){
+				this.xFunction = xFunction;
+				this.yFunction = yFunction;
+				this.zFunction = zFunction;
+				this.Name = Name;
+				this.Color = Color;
+				this.Size = Size;
+				this.Bounds = Bounds;
+			}
+			CalculateValue(t){
+				return new p5.Vector(
+					this.xFunction(t), 
+					this.yFunction(t), 
+					this.zFunction(t)
+				);
+			}
+		}
+
+
+		const Windows = {
+			Equations : 0,
+			EditTable : 1,
+			Canvas : 2,
+
+			None : -1
+		};
+
+		var SelectedWindow = Windows.None;
+		var RotationObject = {
+			x : 0.,
+			y : 0,
+			z : 0,
+
+			angleX : 0,
+			angleY : 0,
+			angleZ : 0
+		};
+		var Functions = new Array();
+		var AmountOfPoints = 10;
+		var Rotate = true;
+		function drawAxis(){
+			strokeWeight(5);
+			stroke(255, 0, 0);
+			line(0, 0, 300, 0, 0, -300);
+			stroke(0, 255, 0);
+			line(0, 300, 0, 0, -300, 0);
+			stroke(0, 0, 255);
+			line(300, 0, 0, -300, 0, 0);
+		}
+		function onRotationClick(){
+			RotationObject.x = parseFloat($('#xRotation').val())/100;
+			RotationObject.y = parseFloat($('#yRotation').val())/100;
+			RotationObject.z = parseFloat($('#zRotation').val())/100;
+			AmountOfPoints = parseInt($('#Points').val());
+		}
+
+
+		function onCreateEquationClick(){
+			
+			strokeWeight(5);
+			Functions.push(new VectorFunction(
+				new Function("return " + $("#x").val())(), 
+				new Function("return " + $("#y").val())(), 
+				new Function("return " + $("#z").val())(), 
+				$('#name').val(),
+				$('#color').val().toLowerCase(), 
+				$('#size').val(),
+				parseInt($('#bounds').val())
+			));
+			console.log($("#z").val());
+			$('#Equations').append('<div class="equation"><h3>' + $('#name').val() + '</h3></div>');
+		}
+		function onCreateButtonClick(){
+			SelectedWindow = Windows.Equations;
+			$("#EditTable").html("<h6>Name</h6><input id = 'name'><h6>Bounds of function</h6><input id = 'bounds' type='number'><h6>Size of points</h6><input id = 'size' value='5' type ='number'><h6>Color</h6><input id = 'color' value='Green'><h6>X</h6><textarea id ='x'>function x(t){return 50;}</textarea><h6>Y</h6><textarea id ='y'>function y(t){return 50;}</textarea><h6>Z</h6><textarea id ='z'>function z(t){return 50;}</textarea><br><button id = 'Create'>Create</button>");
+			document.getElementById("Create").onclick = onCreateEquationClick;
+		}
+		function RotateUsingObject(){
+			rotateX(RotationObject.angleX);
+			rotateY(RotationObject.angleY);
+			rotateZ(RotationObject.angleZ);
+			if(Rotate == true){
+				RotationObject.angleX += RotationObject.x;
+				RotationObject.angleY += RotationObject.y;
+				RotationObject.angleZ += RotationObject.z;
+			}
+		}
+		function DeleteAll(){
+			Functions = new Array();
+			$('#Equations').html("<h1>Equations</h1>");
+		}
+		function setup(){
+			createCanvas(windowWidth * 0.4, windowHeight * 0.85, WEBGL);
+			document.getElementById("defaultCanvas0").onclick = onCanvasClick;
+			document.getElementById("CreateButton").onclick = onCreateButtonClick;
+			document.getElementById("DeleteButton").onclick = DeleteAll;
+		}
+		function drawPoints(){
+			for(var i = 0; i < Functions.length; i++){
+				stroke(Functions[i].Color);
+				strokeWeight(Functions[i].Size);
+				var PreviousValue = Functions[i].CalculateValue(-Math.round(AmountOfPoints/2));
+				var PointValues = -Functions[i].Bounds;
+				for(var o = -Math.round(AmountOfPoints/2); o < Math.round(AmountOfPoints/2); o++){
+					var Value = Functions[i].CalculateValue(PointValues);
+					point(Value.x, -Value.y, Value.z);
+					PointValues += (Functions[i].Bounds * 2)/AmountOfPoints;
+				}
+			}
+		}
+		function draw(){
+			background(0);
+			RotateUsingObject();
+			drawAxis();
+			drawPoints();
+		}
+
+		function windowResized(){
+			resizeCanvas(windowWidth * 0.4, windowHeight * 0.85);
+		}
+		function onToggle(){
+			Rotate = !Rotate;
+		}
+		function onReset(){
+			RotationObject.angleZ = 0;
+			RotationObject.angleY = 0;
+			RotationObject.angleX = 0;
+		}
+		function onCanvasClick(){
+			SelectedWindow = Windows.Canvas;
+
+			jQuery('#EditTable').html("<h3>Settings</h3><h5>Rotation X</h5><input id = 'xRotation' type='number' value='" + RotationObject.x * 100+ "'><h5>Rotation Y</h5><input id = 'yRotation' type='number' value='" + RotationObject.y *100 +"'><h5>Rotation Z</h5><input id = 'zRotation' type='number' value ='" + RotationObject.z*100 + "'><h5>Amount of points</h5><input id = 'Points' type='number' value ='" + AmountOfPoints + "'><button id = 'Toggle'>Toggle Rotation</button><button id = 'Reset'>Reset Rotation</button><button id = 'Push'>Push Settings</button>");
+			document.getElementById("Push").onclick = onRotationClick;
+			document.getElementById("Toggle").onclick = onToggle;
+			document.getElementById("Reset").onclick = onReset;
+		}
+
+
+
+
+	</script>
+</html>
