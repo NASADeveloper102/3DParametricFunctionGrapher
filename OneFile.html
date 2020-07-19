@@ -72,9 +72,9 @@
 				font-size: 8px;
 				cursor: pointer;
 			}
-			h6, textarea, h5{
-				margin: 0%;
-				padding: 0%;
+			h6, textarea, h5,button{
+				margin: 0px;
+				padding: 0px;
 			}
 			.equation{
 				border: 1px solid black;
@@ -85,13 +85,17 @@
 				cursor: pointer;
 			}
 			textarea{
-				height: 15%;
+				height: 9	%;
+				font-size: 13px;
 			}
 			h1{
 				font-size: 16px;
 			}
+			.buttonText,h6,h3{
+				font-size: 16px;
+			}
 		</style>
-		<script src="https://cdn.jsdelivr.net/npm/p5@1.0.0/lib/p5.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/p5@0.10.2/lib/p5.min.js"></script>
 		<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 	</head>
 	<body>
@@ -99,10 +103,10 @@
 			<h1>Equations</h1>
 		</div>
 		<div id = "DeleteButton">
-			<h3>Delete All</h3>
+			<h4 class = "buttonText">Delete All</h4>
 		</div>
 		<div id = "CreateButton">
-			<h3>Create New</h3>
+			<h4 class="buttonText">Create New</h4>
 		</div>
 		<div id = "EditTable"></div>
 	</body>
@@ -146,7 +150,7 @@
 			angleZ : 0
 		};
 		var Functions = new Array();
-		var AmountOfPoints = 10;
+		var AmountOfPoints = 50;
 		var Rotate = true;
 		function drawAxis(){
 			strokeWeight(5);
@@ -182,7 +186,7 @@
 		}
 		function onCreateButtonClick(){
 			SelectedWindow = Windows.Equations;
-			$("#EditTable").html("<h6>Name</h6><input id = 'name'><h6>Bounds of function</h6><input id = 'bounds' type='number'><h6>Size of points</h6><input id = 'size' value='5' type ='number'><h6>Color</h6><input id = 'color' value='Green'><h6>X</h6><textarea id ='x'>function x(t){return 50;}</textarea><h6>Y</h6><textarea id ='y'>function y(t){return 50;}</textarea><h6>Z</h6><textarea id ='z'>function z(t){return 50;}</textarea><br><button id = 'Create'>Create</button>");
+			$("#EditTable").html("<h6>Name</h6><input id = 'name' value='Default'><h6>Bounds of function</h6><input id = 'bounds' type='number' value='150'><h6>Size of points</h6><input id = 'size' value='5' type ='number'><h6>Color</h6><input id = 'color' value='Green'><h6>X</h6><textarea id ='x'>function x(t){return 20*Math.cos(t);}</textarea><h6>Y</h6><textarea id ='y'>function y(t){return 40*Math.sin(t);}</textarea><h6>Z</h6><textarea id ='z'>function z(t){return t;}</textarea><br><button id = 'Create'>Create</button>");
 			document.getElementById("Create").onclick = onCreateEquationClick;
 		}
 		function RotateUsingObject(){
@@ -209,13 +213,33 @@
 			for(var i = 0; i < Functions.length; i++){
 				stroke(Functions[i].Color);
 				strokeWeight(Functions[i].Size);
-				var PreviousValue = Functions[i].CalculateValue(-Math.round(AmountOfPoints/2));
 				var PointValues = -Functions[i].Bounds;
-				for(var o = -Math.round(AmountOfPoints/2); o < Math.round(AmountOfPoints/2); o++){
-					var Value = Functions[i].CalculateValue(PointValues);
-					point(Value.x, -Value.y, Value.z);
+				var PreviousValues = new Array();
+				for(var o = 0; o < 4; o++){
+					PreviousValues.push(Functions[i].CalculateValue(PointValues));
 					PointValues += (Functions[i].Bounds * 2)/AmountOfPoints;
 				}
+				noFill();
+				for(var o = 0; o < AmountOfPoints; o++){
+					var Value = Functions[i].CalculateValue(PointValues);
+					//point(Value.x, -Value.y, Value.z);
+					//line(Value.x, -Value.y, Value.z, PreviousValue.x, -PreviousValue.y, PreviousValue.z);
+					noFill();
+					
+					beginShape();
+					curveVertex(Value.x, -Value.y, Value.z);
+					for(var k = 0; k < 4; k++){
+						curveVertex(PreviousValues[k].x, -PreviousValues[k].y, PreviousValues[k].z);
+					}
+					endShape();
+					PreviousValues[0] = PreviousValues[1];
+					PreviousValues[1] = PreviousValues[2];
+					PreviousValues[2] = PreviousValues[3];
+					PreviousValues[3] = Value;
+
+					PointValues += (Functions[i].Bounds * 2)/AmountOfPoints;
+				}
+
 			}
 		}
 		function draw(){
